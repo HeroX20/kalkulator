@@ -1,38 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Kalkulator Keuangan</title>
+    <title>Kalkulator Bunga</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <h1>Kalkulator Keuangan</h1>
-    
-    <div class="calculator">
-        <label for="type">Jenis Perhitungan:</label>
-        <select id="type">
-            <option value="bunga-tunggal">Bunga Tunggal</option>
-            <option value="bunga-majemuk">Bunga Majemuk</option>
-        </select>
-
-        <div id="input-container">
+    <div class="container">
+        <h1>Kalkulator Bunga</h1>
+        <div class="input-section">
             <label for="modalAwal">Modal Awal:</label>
-            <input type="text" id="modalAwal" required>
-            <label for="bunga">Bunga (% per tahun):</label>
-            <input type="text" id="bunga" required>
-            <label for="periode">Periode (tahun):</label>
-            <input type="text" id="periode" required>
+            <input type="text" id="modalAwal" placeholder="Modal Awal" onkeyup="formatModalAwal(this)">
         </div>
-
-        <button id="calculate">Hitung</button>
-
-        <div id="hasilBungaTunggal"></div>
-        <div id="hasilModalAkhirTunggal"></div>
-        <div id="hasilBungaMajemuk"></div>
-        <div id="hasilModalAkhirMajemuk"></div>
+        <div class="input-section">
+            <label for="bunga">Bunga (%):</label>
+            <input type="number" id="bunga" placeholder="Bunga">
+        </div>
+        <div class="input-section">
+            <label for="periode">Periode (Tahun):</label>
+            <input type="number" id="periode" placeholder="Periode">
+        </div>
+        <div class="input-section">
+            <label for="jenisBunga">Jenis Bunga:</label>
+            <select id="jenisBunga" onchange="ubahLabel(this)">
+                <option value="bungaTunggal">Bunga Tunggal</option>
+                <option value="bungaMajemuk">Bunga Majemuk</option>
+                <option value="anuitas">Anuitas</option>
+            </select>
+        </div>
+        <button onclick="hitungBunga()">Hitung</button>
+        <div id="hasilBunga" class="hasil"></div>
+        <div id="hasilModalAkhir" class="hasil"></div>
     </div>
-
+    <center><div id="hasilBunga" class="hasil">
+        <table>
+            <thead>
+                <tr>
+                    <th>|Bulan ke|</th>
+                    <th>Angsuran Pokok|</th>
+                    <th>Bunga|</th>
+                    <th>Anuitas|</th>
+                </tr>
+            </thead>
+            <tbody id="tabelAnuitas">
+                <!-- Isi tabel akan diisi secara dinamis oleh JavaScript -->
+            </tbody>
+        </table>
+    </div></center>
     <script src="script.js"></script>
 </body>
 </html>
