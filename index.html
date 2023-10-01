@@ -2,9 +2,12 @@
 <html>
 <head>
     <title>Kalkulator Bunga</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+    <button id="theme-button" class="button dark-mode">Toggle Theme</button>
+    <br>
     <div class="container">
         <h1>Kalkulator Bunga</h1>
         <div class="input-section">
@@ -31,21 +34,23 @@
         <div id="hasilBunga" class="hasil"></div>
         <div id="hasilModalAkhir" class="hasil"></div>
     </div>
-    <center><div id="hasilBunga" class="hasil">
-        <table>
-            <thead>
-                <tr>
-                    <th>|Bulan ke|</th>
-                    <th>Angsuran Pokok|</th>
-                    <th>Bunga|</th>
-                    <th>Anuitas|</th>
-                </tr>
-            </thead>
-            <tbody id="tabelAnuitas">
-                <!-- Isi tabel akan diisi secara dinamis oleh JavaScript -->
-            </tbody>
-        </table>
-    </div></center>
+    <center>
+        <div id="tabelAnuitas" class="hasil" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bulan ke</th>
+                        <th>Angsuran Pokok</th>
+                        <th>Bunga</th>
+                        <th>Anuitas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Isi tabel akan diisi secara dinamis oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </center>
     <script src="script.js"></script>
 </body>
 </html>
