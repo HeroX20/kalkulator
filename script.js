@@ -1,35 +1,70 @@
+function setDefaultTheme() {
+    const storedTheme = localStorage.getItem("theme");
+    if (storedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+
+    const container = document.querySelector(".container");
+    if (isDarkMode) {
+        container.classList.add("dark-mode");
+        container.classList.remove("light-mode");
+    } else {
+        container.classList.add("light-mode");
+        container.classList.remove("dark-mode");
+    }
+}
+
+window.addEventListener("load", setDefaultTheme);
+
+const themeButton = document.getElementById("theme-button");
+if (themeButton) {
+    themeButton.addEventListener("click", toggleTheme);
+}
+
 function hitungBunga() {
-    var modalAwalInput = document.getElementById("modalAwal");
-    var Mo = parseFloat(modalAwalInput.value.replace(/\./g, '').replace(/,/g, '.')); // Mengganti titik atau koma dengan titik desimal
-    var i = parseFloat(document.getElementById("bunga").value) / 100;
-    var n = parseFloat(document.getElementById("periode").value);
+    // Mengambil input dari elemen HTML
+    var modalAwalInput = parseFloat(document.getElementById("modalAwal").value.replace(/\./g, '').replace(/,/g, '.'));
+    var bungaInput = parseFloat(document.getElementById("bunga").value) / 100;
+    var periodeInput = parseFloat(document.getElementById("periode").value);
     var jenisBunga = document.getElementById("jenisBunga").value;
-    
+
+    // Mengambil referensi ke tabelAnuitas
+    var tabelAnuitas = document.getElementById("tabelAnuitas");
+
+    // Menampilkan atau menyembunyikan tabel berdasarkan jenisBunga
+    tabelAnuitas.style.display = jenisBunga === "anuitas" ? "table" : "none";
+
     if (jenisBunga === "bungaTunggal") {
-        var B = Mo * i;
-        var Mn = Mo * (1 + n * i);
+        var bungaTunggal = modalAwalInput * bungaInput;
+        var modalAkhirBungaTunggal = modalAwalInput * (1 + periodeInput * bungaInput);
 
         // Memformat hasil dengan titik ribuan
-        document.getElementById("hasilBunga").innerHTML = "Bunga Tunggal: " + formatRibuan(B);
-        document.getElementById("hasilModalAkhir").innerHTML = "Modal Akhir (Bunga Tunggal): " + formatRibuan(Mn);
+        document.getElementById("hasilBunga").innerHTML = "Bunga Tunggal: " + formatRibuan(bungaTunggal);
+        document.getElementById("hasilModalAkhir").innerHTML = "Modal Akhir (Bunga Tunggal): " + formatRibuan(modalAkhirBungaTunggal);
     } else if (jenisBunga === "bungaMajemuk") {
-        var Bm = (Mo * Math.pow((1 + i), n)) - Mo;
-        var MnMajemuk = Mo * Math.pow((1 + i), n);
+        var bungaMajemuk = (modalAwalInput * Math.pow((1 + bungaInput), periodeInput)) - modalAwalInput;
+        var modalAkhirBungaMajemuk = modalAwalInput * Math.pow((1 + bungaInput), periodeInput);
 
         // Memformat hasil dengan titik ribuan
-        document.getElementById("hasilBunga").innerHTML = "Bunga Majemuk: " + formatRibuan(Bm);
-        document.getElementById("hasilModalAkhir").innerHTML = "Modal Akhir (Bunga Majemuk): " + formatRibuan(MnMajemuk);
+        document.getElementById("hasilBunga").innerHTML = "Bunga Majemuk: " + formatRibuan(bungaMajemuk);
+        document.getElementById("hasilModalAkhir").innerHTML = "Modal Akhir (Bunga Majemuk): " + formatRibuan(modalAkhirBungaMajemuk);
     } else if (jenisBunga === "anuitas") {
-        var A = (Mo * i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
-        var A1 = (Mo * i) / (Math.pow(1 + i, n) - 1);
+        var anuitas = (modalAwalInput * bungaInput * Math.pow(1 + bungaInput, periodeInput)) / (Math.pow(1 + bungaInput, periodeInput) - 1);
+        var anuitasBulanPertama = (modalAwalInput * bungaInput) / (Math.pow(1 + bungaInput, periodeInput) - 1);
 
-        // Menghitung dan mengisi tabel anuitas
-        var tabelAnuitas = document.getElementById("tabelAnuitas");
-        tabelAnuitas.innerHTML = ""; // Mengosongkan tabel sebelum mengisi
+        // Mengosongkan tbody tabel sebelum mengisi
+        var tbody = tabelAnuitas.querySelector("tbody");
+        tbody.innerHTML = "";
 
-        for (var bulan = 1; bulan <= n; bulan++) {
-            var An = A1 * Math.pow(1 + i, bulan - 1);
-            var Bn = A - An;
+        for (var bulan = 1; bulan <= periodeInput; bulan++) {
+            var anuitasBulanN = anuitasBulanPertama * Math.pow(1 + bungaInput, bulan - 1);
+            var bungaBulanN = anuitas - anuitasBulanN;
 
             var row = document.createElement("tr");
             var cellBulan = document.createElement("td");
@@ -38,25 +73,26 @@ function hitungBunga() {
             var cellAnuitas = document.createElement("td");
 
             cellBulan.textContent = bulan;
-            cellAngsuranPokok.textContent = formatRibuan(An - Bn);
-            cellBunga.textContent = formatRibuan(Bn);
-            cellAnuitas.textContent = formatRibuan(A);
+            cellAngsuranPokok.textContent = formatRibuan(anuitasBulanN - bungaBulanN);
+            cellBunga.textContent = formatRibuan(bungaBulanN);
+            cellAnuitas.textContent = formatRibuan(anuitas);
 
             row.appendChild(cellBulan);
             row.appendChild(cellAngsuranPokok);
             row.appendChild(cellBunga);
             row.appendChild(cellAnuitas);
 
-            tabelAnuitas.appendChild(row);
+            tbody.appendChild(row);
         }
+
         // Memformat hasil dengan titik ribuan
-        document.getElementById("hasilBunga").innerHTML = "Anuitas: " + formatRibuan(A);
+        document.getElementById("hasilBunga").innerHTML = "Anuitas: " + formatRibuan(anuitas);
         document.getElementById("hasilModalAkhir").innerHTML = "";
 
-        // Tambahkan hasil A1, An, dan Bn ke dalam hasil
-        document.getElementById("hasilBunga").innerHTML += "<br>Anuitas Bulan Pertama (A1): " + formatRibuan(A1);
-        document.getElementById("hasilBunga").innerHTML += "<br>Anuitas Bulan Terakhir (An): " + formatRibuan(An);
-        document.getElementById("hasilBunga").innerHTML += "<br>Besar Bunga Bulan Terakhir (Bn): " + formatRibuan(Bn);
+        // Menambahkan hasil A1, An, dan Bn ke dalam hasil
+        document.getElementById("hasilBunga").innerHTML += "<br>Anuitas Bulan Pertama (A1): " + formatRibuan(anuitasBulanPertama);
+        document.getElementById("hasilBunga").innerHTML += "<br>Anuitas Bulan Terakhir (An): " + formatRibuan(anuitasBulanPertama * Math.pow(1 + bungaInput, periodeInput - 1));
+        document.getElementById("hasilBunga").innerHTML += "<br>Besar Bunga Bulan Terakhir (Bn): " + formatRibuan(anuitas - (anuitasBulanPertama * Math.pow(1 + bungaInput, periodeInput - 1)));
     }
 }
 
