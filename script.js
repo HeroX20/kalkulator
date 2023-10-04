@@ -73,7 +73,7 @@ function hitungBunga() {
             var cellAnuitas = document.createElement("td");
 
             cellBulan.textContent = bulan;
-            cellAngsuranPokok.textContent = formatRibuan(anuitasBulanN - bungaBulanN);
+            cellAngsuranPokok.textContent = formatRibuan(anuitas - bungaBulanN);
             cellBunga.textContent = formatRibuan(bungaBulanN);
             cellAnuitas.textContent = formatRibuan(anuitas);
 
